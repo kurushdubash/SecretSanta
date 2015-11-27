@@ -98,7 +98,8 @@ def generate_email(participants):
 def generate_text(participants):
 	text = ''
 	for person in participants:
-		text = 'Dear ' + str(person.name) + ',\n    Welcome to this year\'s Secret Santa!! Below you will find the details of your chosen recipient. \n \n' + 'Name: ' + str(person.recipient) + '\n'
+		text = 'Hey ' + str(person.name) + ',\n 2015 GBL Secret Santa details have been sent out. Please check your email! \n -Santa'      
+		person.sms_text = text
 
 def send_email(name, email, subject, text, username, password, server='smtp.gmail.com:587'):
 
@@ -132,8 +133,9 @@ def send_text(name, number, text):
 	client.messages.create(
 		to="+1"+number, 
 		from_="+15622731468", 
-		body='Hey ' + name + ', \n' + text,  
+		body=text,  
 	)
+	print('Sent text message to ' + name)
 
 def run(test=True):
 	participants = get_participants()
@@ -147,6 +149,9 @@ def run(test=True):
 	for person in participants:
 		if test:
 			send_email(person.name, 'dubash.kurush@berkeley.edu', "GBL Secret Santa 2015!", person.email_text, username, password)
-		#send_email(person.name, person.email, "GBL Secret Santa 2015!", person.email_text, username, password)
+			send_text(person.name, '5626863998', person.sms_text)
+		else:
+			send_email(person.name, person.email, "GBL Secret Santa 2015!", person.email_text, username, password)
+			send_text(person.name, person.number, person.sms_text)
 
 run()
