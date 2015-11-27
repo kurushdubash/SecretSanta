@@ -1,3 +1,5 @@
+#! python3
+
 import csv
 import getpass
 import smtplib
