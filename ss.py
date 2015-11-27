@@ -54,7 +54,7 @@ def match_participants(participants):
 	count = 0
 	while (count < len(participants)):
 		copy.append(count)
-		count+=1
+		count += 1
 	random.shuffle(copy)
 
 	count = 0
@@ -92,16 +92,15 @@ def print_matches(participants):
 		print(item.name + ' --> ' + item.recipient.name)
 
 def generate_email(participants):
-	template = _.template('Dear <%= name %>,\n\r Welcome to this year\'s Secret Santa!! Below you will find the details of your chosen recipient. \n \n' + 'Name: <%= name %>\n\nThey enjoy <%= enjoy %>, their favorite holiday snack is <%= fav_holiday_snack %> and their preferred holiday if <%= holiday %>. \nTheir random other is <%= other %>')
+	email_template = _.template('Dear <%= name %>,\n\r Welcome to this year\'s Secret Santa!! Below you will find the details of your chosen recipient. \n \n' + 'Name: <%= name %>\n\nThey enjoy <%= enjoy %>, their favorite holiday snack is <%= fav_holiday_snack %> and their preferred holiday if <%= holiday %>. \nTheir random other is <%= other %>')
 
 	for person in participants:
-		person.email_text = template(vars(person))
+		person.email_text = email_template(vars(person))
 
 def generate_text(participants):
-	text = ''
+	sms_template = _.template('Hey <%= name %>,\n 2015 GBL Secret Santa details have been sent out. Please check your email! \n -Santa')
 	for person in participants:
-		text = 'Hey ' + str(person.name) + ',\n 2015 GBL Secret Santa details have been sent out. Please check your email! \n -Santa'
-		person.sms_text = text
+		person.sms_text = sms_template(vars(person))
 
 def send_email(name, email, subject, text, username, password, server='smtp.gmail.com:587'):
 	fromaddr = username
