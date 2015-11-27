@@ -1,13 +1,17 @@
+#! python3
+
 import csv
+import getpass
 import smtplib
-from twilio.rest import TwilioRestClient 
+from twilio.rest import TwilioRestClient
 import random
- 
-# put your own credentials here 
-ACCOUNT_SID = "AC03b180bc661ab09945326c83cc118a0a" 
-AUTH_TOKEN = "861d6af22b6012fbf1a9e658c2c47428" 
- 
-client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN) 
+from underscore import _
+
+# put your own credentials here
+ACCOUNT_SID = "AC03b180bc661ab09945326c83cc118a0a"
+AUTH_TOKEN = "861d6af22b6012fbf1a9e658c2c47428"
+
+client = TwilioRestClient(ACCOUNT_SID, AUTH_TOKEN)
 
 
 class Participant():
@@ -22,7 +26,7 @@ class Participant():
 		self.other = other
 		self.phone = phone
 		self.email = email
-		
+
 
 def get_participants():
 	participants = []
@@ -52,7 +56,7 @@ def match_participants(participants):
 	count = 0
 	while (count < len(participants)):
 		copy.append(count)
-		count+=1
+		count += 1
 	random.shuffle(copy)
 
 	count = 0
@@ -87,23 +91,20 @@ def check(participants, count=100):
 
 def print_matches(participants):
 	for item in participants:
-		print(item.name + ' --> ' + item.recipient.name) 
+		print(item.name + ' --> ' + item.recipient.name)
 
 def generate_email(participants):
-	text = ''
+	email_template = _.template('Dear <%= name %>,\n\r Welcome to this year\'s Secret Santa!! Below you will find the details of your chosen recipient. \n \n' + 'Name: <%= name %>\n\nThey enjoy <%= enjoy %>, their favorite holiday snack is <%= fav_holiday_snack %> and their preferred holiday if <%= holiday %>. \nTheir random other is <%= other %>')
+
 	for person in participants:
-		text = 'Dear ' + str(person.name) + ',\n    Welcome to this year\'s Secret Santa!! Below you will find the details of your chosen recipient. \n \n' + 'Name: ' + str(person.recipient.name) + '\n' + str(person.recipient.name) + ' enjoys: ' + str(person.recipient.enjoy) + '\n' + str(person.recipient.name) + '\'s Favorite Holiday Snack: ' + str(person.recipient.fav_holiday_snack) + '\n' + str(person.recipient.name) +  '\'s Preferred Holiday: ' + str(person.recipient.holiday) + '\n' + 'Other: ' + str(person.recipient.other)
-		person.email_text = text
+		person.email_text = email_template(vars(person))
 
 def generate_text(participants):
-	text = ''
+	sms_template = _.template('Hey <%= name %>,\n 2015 GBL Secret Santa details have been sent out. Please check your email! \n -Santa')
 	for person in participants:
-		text = 'Hey ' + str(person.name) + ',\n 2015 GBL Secret Santa details have been sent out. Please check your email! \n -Santa'      
-		person.sms_text = text
+		person.sms_text = sms_template(vars(person))
 
 def send_email(name, email, subject, text, username, password, server='smtp.gmail.com:587'):
-
-
 	fromaddr = username
 	toaddrs  = email
 	msg = "\r\n".join([
@@ -129,12 +130,12 @@ def send_email(name, email, subject, text, username, password, server='smtp.gmai
 
 
 def send_text(name, number, text):
-	
 	client.messages.create(
-		to="+1"+number, 
-		from_="+15622731468", 
-		body=text,  
+		to="+1"+number,
+		from_="+15622731468",
+		body=text,
 	)
+
 	print('Sent text message to ' + name)
 
 def run(test=True):
@@ -142,13 +143,15 @@ def run(test=True):
 	match_participants(participants)
 	generate_email(participants)
 	generate_text(participants)
+
 	print("Enter username/email")
 	username = str(input())
-	import getpass
 	password = getpass.getpass('Password:')
+
+	# Run Loop
 	for person in participants:
 		if test:
-			send_email(person.name, 'dubash.kurush@berkeley.edu', "GBL Secret Santa 2015!", person.email_text, username, password)
+			send_email(person.name, username, "GBL Secret Santa 2015!", person.email_text, username, password)
 			send_text(person.name, '5626863998', person.sms_text)
 		else:
 			send_email(person.name, person.email, "GBL Secret Santa 2015!", person.email_text, username, password)
