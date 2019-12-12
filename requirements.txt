@@ -1,2 +1,4 @@
 Clockwork
 underscore.py==0.1.6
+requests
+emoji
