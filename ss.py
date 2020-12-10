@@ -6,7 +6,6 @@ import email
 import emoji
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from clockwork import clockwork
 
 class Participant():
 	recipient = ''
@@ -93,12 +92,12 @@ def generate_email(participants):
 	for person in participants:
 		recipient = person.recipient
 
-		text = '\nDear ' + str(person.name.split()[0]) + ',\n<br>	Welcome to the 2019 GBL Secret Santa!! Below you will find the details of your recipient...' + "<b>" + str(recipient.name.upper()) + '</b>!\n \n<br>'
+		text = '\nDear ' + str(person.name.split()[0]) + ',\n<br>	Welcome to the 2020 GBL Secret Santa!! Below you will find the details of your recipient...' + "<b>" + str(recipient.name.upper()) + '</b>!\n \n<br>'
 		text += "<br>Name: " + "<b>" + recipient.name + "</b><br>\n"
 		text += "<br>Shipping Address: " + "<b>" + recipient.preferred_shipping_addy.replace("\n", " ") + "</b><br>\n</b><br>\n"
 
 		text += "<br>Happy Holidays!" + "</b><br></b><br>\n"
-		text += "<img src='https://res.cloudinary.com/teepublic/image/private/s--MhpithCy--/c_crop,x_10,y_10/c_fit,w_857/c_crop,g_north_west,h_972,w_1127,x_-135,y_-170/l_misc:transparent_1260/fl_layer_apply,g_north_west,x_-201,y_-312/c_mfit,g_north_east,u_misc:tapestry-l-l-gradient/e_displace,fl_layer_apply,x_0,y_19/l_upload:v1507037316:production:blanks:knoqtwkqk9vucfsy8ke0/fl_layer_apply,g_north_west,x_0,y_0/b_rgb:c62b29/c_limit,f_jpg,h_630,q_90,w_630/v1575247402/production/designs/6983060_0.jpg'></img>"
+		text += "<img src='https://media0.giphy.com/media/RJKHjCAdsAfQPn03qQ/200.gif'></img>"
 		text += "<br>Please do NOT respond to this email. It will reveal to me your recipient.</b>\n"
 		person.email_text = text
 
@@ -168,19 +167,8 @@ def run(test=True):
 	generate_email(participants)
 	generate_text(participants)
 
-	print("Enter username/email")
-	username = str(input())
-	import getpass
-	password = getpass.getpass('Password:')
-	print(password)
-
+	username = "dubash.kurush@gmail.com"
+	pass = "" #gmail app pass
 	for person in participants:
-		send_email(person.name, person.email, "GBL Secret Santa 2019!", person.email_text, username, password)
-	# try:
-	# 	for person in participants:
-	# 		# send_text(person.sms_text, person.phone)
-	# 		send_text(person.sms_text, "15626863998")
-	# 		print(0/0)
-	# except Exception as e:
-	# 	print(e)
+		send_email(person.name, person.email, "GBL Secret Santa 2019!", person.email_text, username, )
 a = run()
